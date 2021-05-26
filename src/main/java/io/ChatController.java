@@ -1,6 +1,8 @@
 package io;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.URL;
 import java.nio.file.Paths;
@@ -18,16 +20,16 @@ public class ChatController implements Initializable {
 
     public TextField input;
     public ListView<String> listView;
+    private String clientDir = "clientDir";
 
     private ObjectInputStream is;
     private ObjectOutputStream os;
-    private String clientDir = "clientDir";
 
     public void send(ActionEvent actionEvent) throws IOException {
         String fileName = input.getText();
-        FileObject file = new FileObject(Paths.get(clientDir,fileName));
+        FileObject file = new FileObject(Paths.get(clientDir, fileName));
         os.writeObject(file);
-        os.writeObject( new ListRequest());
+        os.writeObject(new ListRequest());
         os.flush();
         input.clear();
     }
@@ -38,10 +40,9 @@ public class ChatController implements Initializable {
             Socket socket = new Socket("localhost", 8189);
             os = new ObjectOutputStream(socket.getOutputStream());
             is = new ObjectInputStream(socket.getInputStream());
-            os.writeObject( new ListRequest());
+
+            os.writeObject(new ListRequest());
             os.flush();
-
-
 
             Thread readThread = new Thread(() -> {
                 try {
@@ -50,7 +51,6 @@ public class ChatController implements Initializable {
                         switch (message.getType()) {
                             case LIST:
                                 ListMessage list = (ListMessage) message;
-
                                 Platform.runLater(() -> {
                                     listView.getItems().clear();
                                     listView.getItems()
@@ -58,6 +58,7 @@ public class ChatController implements Initializable {
                                 });
                                 break;
                         }
+
                     }
                 } catch (Exception e) {
                     log.error("e=", e);
@@ -70,4 +71,3 @@ public class ChatController implements Initializable {
         }
     }
 }
-
