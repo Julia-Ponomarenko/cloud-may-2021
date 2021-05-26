@@ -1,17 +1,21 @@
 package io;
 
+import java.util.List;
+
 import lombok.Data;
 
-import java.util.List;
 @Data
-public class ListMessage implements Message{
+public class ListMessage implements Message {
+
     List<String> files;
 
     public ListMessage(List<String> files) {
         this.files = files;
     }
+
     @Override
-    public MassageType getType() {
-        return MassageType.LIST;
+    public MessageType getType() {
+        return MessageType.LIST;
     }
+
 }

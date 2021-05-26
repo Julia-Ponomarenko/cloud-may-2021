@@ -1,8 +1,8 @@
 package io;
 
-public class ListRequest implements Message{
+public class ListRequest implements Message {
     @Override
-    public MassageType getType() {
-        return MassageType.LIST_REQEST;
+    public MessageType getType() {
+        return MessageType.LIST_REQUEST;
     }
 }

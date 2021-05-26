@@ -1,6 +1,9 @@
 package io;
 
-import java.io.*;
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -27,10 +30,10 @@ public class Handler implements Runnable, Closeable {
                 Message msg = (Message) is.readObject();
                 switch (msg.getType()) {
                     case FILE:
-                        handleFileMessage (msg);
+                        handleFileMessage(msg);
                         break;
-                    case LIST_REQEST:
-                        List<String> files =Files.list(Paths.get(serverDir))
+                    case LIST_REQUEST:
+                        List<String> files = Files.list(Paths.get(serverDir))
                                 .map(p -> p.getFileName().toString())
                                 .collect(Collectors.toList());
                         os.writeObject(new ListMessage(files));
@@ -43,9 +46,9 @@ public class Handler implements Runnable, Closeable {
         }
     }
 
-    private void handleFileMessage(Message msg) throws Exception{
+    private void handleFileMessage(Message msg) throws Exception {
         FileObject file = (FileObject) msg;
-        Files.write(Paths.get(serverDir + file.getName()),file.getData());
+        Files.write(Paths.get(serverDir + file.getName()), file.getData());
     }
 
     @Override
