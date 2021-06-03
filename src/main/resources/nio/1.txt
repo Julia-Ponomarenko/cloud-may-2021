@@ -1,0 +1,11 @@
+Hello world
+
+
+Welcome to server
+Input help to show commands
+
+ls - список файлов в директории
+cat fileName - распечатывает содержание файла
+mkdir dirName - создает директорию
+touch file.txt - создает пустой файл
+read "message" to fileName
